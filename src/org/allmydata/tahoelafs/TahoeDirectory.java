@@ -34,7 +34,8 @@ public class TahoeDirectory {
 	public String[] toStringArray() {
 		List<String> al = new ArrayList<String>();
 					
-	    Iterator<String> iter = children.keys();
+	    Iterator keys = children.keys();
+		Iterator<String> iter = keys;
 		    
 	    while (iter.hasNext()) {
 	    	String entry = (String) iter.next();
@@ -78,5 +79,10 @@ public class TahoeDirectory {
 		String cap = item.getJSONObject(1).getString("ro_uri");
 		Log.d(TAG, "Cap = " + cap);
 		return cap;
+	}
+
+	public String getFilename(int id) throws Exception {
+		String filename = children.names().getString(id);
+		return filename;
 	}
 }

@@ -1,15 +1,7 @@
 package org.allmydata.tahoelafs;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import org.json.JSONArray;
-import org.json.JSONObject;
-
-import android.util.Log;
 
 public class TahoeClient {
 	private static String TAG = "TahoeClient";
@@ -24,7 +16,7 @@ public class TahoeClient {
 	}
 	
 	public void downloadFile(String cap, String dst) throws IOException {
-		RESTClient.get(node + "/uri/" + cap, dst);
+		RESTClient.download(node + "/uri/" + cap, dst);
 	}
 	
 	public TahoeDirectory getDirectory(String cap) throws Exception {

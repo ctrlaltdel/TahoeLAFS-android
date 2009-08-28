@@ -123,7 +123,7 @@ public class Browser extends ListActivity {
 
     		case filenode:
     			Log.i(TAG, "A file was selected");
-    			openFile(dir.getReadCap(position));
+    			openFile(dir.getReadCap(position), dir.getFilename(position));
     		}
     	} catch (Exception e) {
     		Log.d(TAG, e.getLocalizedMessage());
@@ -131,20 +131,39 @@ public class Browser extends ListActivity {
     	}
     }
     
-    private void openFile(String cap) {
-    	Log.i(TAG, "Getting file " + cap);
-    	String dst = "/sdcard/test.png";
+    /*
+     * Download the file using Android Web Browser
+     */
+    private void openFile(String cap, String filename) {
+ 		Uri data = Uri.parse(node + "/uri/" + cap);
+		Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
+		intent.setData(data);
+		startActivity(intent);
+    }
+    
+    /*
+     * Download the file using internal downloader
+     */
+    private void downloadFile(String cap, String filename) {
+    	Log.i(TAG, "Getting file " + filename + "whose cap is " + cap);
+    	String dst = "/sdcard/" + filename;
 
     	try {
     		tahoe.downloadFile(cap, dst);
-
-    		Uri data = Uri.parse("file:///sdcard/test.jpg");
-    		Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
-    		intent.setData(data);
-    		intent.setType("image/png");
-    		startActivity(intent);
     	} catch (IOException e) {
     		Log.e(TAG, "Download failed");
+    	}
+    	
+    	// Display the downloaded file
+    	try {
+       		Uri data = Uri.parse(dst);
+    		Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
+    		intent.setData(data);
+    		//intent.setType("image/png");
+    		startActivity(intent);
+    	} catch (Exception e) {
+    		Log.e(TAG, "I cannot open this file");
+    		Log.e(TAG, e.getMessage());
     	}
     }
 }

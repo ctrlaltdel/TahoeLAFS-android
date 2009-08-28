@@ -228,9 +228,8 @@ public class Browser extends ListActivity {
     			Log.d(TAG, e.getStackTrace().toString());
     		}
     			
-    		
-    		
-    		
+    		// Refresh the current view
+    		loadDirectory(current_cap);
     	}
     }
 }

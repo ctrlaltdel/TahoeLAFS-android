@@ -28,6 +28,8 @@ public class Browser extends ListActivity {
     String node;
     String rootcap;
     
+    String current_cap;
+    
     private TahoeClient tahoe;
     private TahoeDirectory dir;
     
@@ -37,10 +39,16 @@ public class Browser extends ListActivity {
     public static final int MENU_REFRESH  = Menu.FIRST + 2;
     public static final int MENU_SETTINGS = Menu.FIRST + 3;
     public static final int MENU_ABOUT    = Menu.FIRST + 4;
+    public static final int MENU_MKDIR    = Menu.FIRST + 5;
+    
+    // Sub activities
+    public static final int ACT_DONTCARE = 0;
+    public static final int ACT_UPLOAD   = 1;
     
     /* Creates the menu items */
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(0, MENU_UPLOAD,   0, "Upload");
+        menu.add(0, MENU_MKDIR,    0, "Mkdir");
         menu.add(0, MENU_HOME,     0, "Home");
         menu.add(0, MENU_REFRESH,  0, "Refresh");
         menu.add(0, MENU_SETTINGS, 0, "Settings");
@@ -57,12 +65,18 @@ public class Browser extends ListActivity {
         		intent = new Intent("org.openintents.action.PICK_FILE");
         		startActivityForResult(intent, 1);
         		return true;
+        		
+        	case MENU_MKDIR:
+        		
+        		return true;
+        		
         	case MENU_HOME:
         		intent = new Intent(android.content.Intent.ACTION_VIEW);
         		intent.setData(Uri.fromParts("lafs", "", rootcap));
         		return true;
         		
         	case MENU_REFRESH:
+        		loadDirectory(current_cap);
         		return true;
         	
         	case MENU_SETTINGS:
@@ -114,6 +128,7 @@ public class Browser extends ListActivity {
     
     private void loadDirectory(String cap) {        
         try {
+        	current_cap = cap;
         	dir = tahoe.getDirectory(cap);
         	assert dir != null;
         } catch (Exception e) {
@@ -159,7 +174,7 @@ public class Browser extends ListActivity {
      * Download the file using Android Web Browser
      */
     private void openFile(String cap, String filename) {
- 		Uri data = Uri.parse(node + "/uri/" + cap);
+ 		Uri data = Uri.parse(node + "/file/" + cap + "/@@named=/" + filename);
 		Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
 		intent.setData(data);
 		startActivity(intent);
@@ -188,6 +203,34 @@ public class Browser extends ListActivity {
     	} catch (Exception e) {
     		Log.e(TAG, "I cannot open this file");
     		Log.e(TAG, e.getMessage());
+    	}
+    }
+    
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    	Log.i(TAG, "Back from startActivityForResult");
+    	String params = data.getDataString();
+    	
+    	switch (requestCode) {
+    	case ACT_DONTCARE:
+    		Log.i(TAG, "I don't care about this activity's result");
+    		
+    	case ACT_UPLOAD:
+    		Log.i(TAG, "File upload");
+    		String src = data.getData().getEncodedPath();
+    		String filename = data.getData().getLastPathSegment();
+    		
+    		Log.i(TAG, "Source file: " + src);
+    		
+    		try {
+    			tahoe.uploadFile(current_cap, filename, src);
+    		} catch (Exception e) {
+    			Log.e(TAG, "File upload failed");
+    			Log.d(TAG, e.getStackTrace().toString());
+    		}
+    			
+    		
+    		
+    		
     	}
     }
 }

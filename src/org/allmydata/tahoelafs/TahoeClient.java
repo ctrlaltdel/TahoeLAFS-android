@@ -11,8 +11,8 @@ public class TahoeClient {
 		node = url;
 	}
 	
-	public void uploadFile(String directory, String filename, String src) {
-		
+	public void uploadFile(String dir, String filename, String src) throws Exception {
+		RESTClient.put(node + "/uri/" + dir + "/" + filename, src);
 	}
 	
 	public void downloadFile(String cap, String dst) throws IOException {

@@ -10,4 +10,5 @@
 <string name="about_website_label">website label</string>
 <string name="license_short">license</string>
 <string name="about_email">francois@ctrlaltdel.ch</string>
+<string name="settings">Settings</string>
 </resources>

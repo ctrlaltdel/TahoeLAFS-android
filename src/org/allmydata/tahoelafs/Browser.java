@@ -6,8 +6,10 @@ import org.allmydata.tahoelafs.TahoeDirectory.types;
 
 import android.app.ListActivity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,8 +21,12 @@ import android.widget.Toast;
 
 public class Browser extends ListActivity {
     private static final String TAG = "DirectoryList";
-    private String rootcap = "URI:DIR2:djrdkfawoqihigoett4g6auz6a:jx5mplfpwexnoqff7y5e4zjus4lidm76dcuarpct7cckorh2dpgq";
-    private String node    = "http://testgrid.allmydata.org:3567";
+
+    private String TEST_NODE    = "http://testgrid.allmydata.org:3567";
+    private String TEST_ROOTCAP = "URI:DIR2:djrdkfawoqihigoett4g6auz6a:jx5mplfpwexnoqff7y5e4zjus4lidm76dcuarpct7cckorh2dpgq";
+    
+    String node;
+    String rootcap;
     
     private TahoeClient tahoe;
     private TahoeDirectory dir;
@@ -60,8 +66,10 @@ public class Browser extends ListActivity {
         		return true;
         	
         	case MENU_SETTINGS:
-        		return true;
-        		
+                Intent myIntent = new Intent();
+                myIntent.setClassName("org.allmydata.tahoelafs", "org.allmydata.tahoelafs.Settings");
+                startActivity(myIntent);
+                return true;
         	case MENU_ABOUT:
         		intent = new Intent("org.openintents.action.SHOW_ABOUT_DIALOG");
         		startActivityForResult(intent, 0);
@@ -74,17 +82,29 @@ public class Browser extends ListActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        setContentView(R.layout.browser);
 
         setDefaultKeyMode(DEFAULT_KEYS_SHORTCUT);
+        
+    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         // Inform the list we provide context menus for items
         getListView().setOnCreateContextMenuListener(this);
+        
+        // Get preferences
+        node = prefs.getString("node", TEST_NODE);
+        rootcap = prefs.getString("rootcap", TEST_ROOTCAP);
+        
+        if (node.equals(TEST_NODE) && rootcap.equals(TEST_ROOTCAP)) {
+        	Toast.makeText(this, "Warning: You are using the TESTING grid\nyou can change that in the settings", Toast.LENGTH_LONG).show();
+        }
         
         // Load Tahoe client
         tahoe  = new TahoeClient(node);
         
         Intent intent = getIntent();
-        if (intent.getData() == null) {
+        if (intent.getData() == null) {        	
             intent.setData(Uri.fromParts("lafs", "", rootcap));
         }
              
@@ -129,6 +149,10 @@ public class Browser extends ListActivity {
     		Log.d(TAG, e.getLocalizedMessage());
     		Toast.makeText(this, "Cannot access this element", Toast.LENGTH_LONG).show();
     	}
+    }
+    
+    protected void OnItemLongClickListener(ListView l, View v, int position, long id) {
+    	Log.d(TAG, "Item " + position + "was clicked for a long time");
     }
     
     /*

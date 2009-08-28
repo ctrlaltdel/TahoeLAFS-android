@@ -5,7 +5,6 @@ import java.io.IOException;
 import org.allmydata.tahoelafs.TahoeDirectory.types;
 
 import android.app.ListActivity;
-import android.content.ContentUris;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,7 +12,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -46,21 +44,27 @@ public class Browser extends ListActivity {
     
     /* Handles item selections */
     public boolean onOptionsItemSelected(MenuItem item) {
+    	Intent intent;
+    	
         switch (item.getItemId()) {
         	case MENU_UPLOAD:
-        		Intent intent2 = new Intent("org.openintents.action.PICK_FILE");
-        		startActivityForResult(intent2, 1);
+        		intent = new Intent("org.openintents.action.PICK_FILE");
+        		startActivityForResult(intent, 1);
         		return true;
         	case MENU_HOME:
-        		Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
+        		intent = new Intent(android.content.Intent.ACTION_VIEW);
         		intent.setData(Uri.fromParts("lafs", "", rootcap));
         		return true;
+        		
         	case MENU_REFRESH:
         		return true;
         	
         	case MENU_SETTINGS:
         		return true;
+        		
         	case MENU_ABOUT:
+        		intent = new Intent("org.openintents.action.SHOW_ABOUT_DIALOG");
+        		startActivityForResult(intent, 0);
         		return true;
         }
         
@@ -134,7 +138,7 @@ public class Browser extends ListActivity {
     	try {
     		tahoe.downloadFile(cap, dst);
 
-    		Uri data = Uri.parse("file:///sdcard/test.png");
+    		Uri data = Uri.parse("file:///sdcard/test.jpg");
     		Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
     		intent.setData(data);
     		intent.setType("image/png");

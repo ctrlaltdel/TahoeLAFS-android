@@ -2,4 +2,12 @@
 <resources>
     <string name="hello">Hello World, TahoeLAFS!</string>
     <string name="app_name">TahoeLAFS</string>
+<string-array name="about_authors"><item>François Deppierraz</item>
+</string-array>
+<string name="about_website_url">http://francois.ctrlaltdel.ch/tahoe-android</string>
+<string name="about_comments">Comments</string>
+<string name="about_copyright">Copyright</string>
+<string name="about_website_label">website label</string>
+<string name="license_short">license</string>
+<string name="about_email">francois@ctrlaltdel.ch</string>
 </resources>

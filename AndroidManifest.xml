@@ -1,17 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="org.allmydata.tahoelafs"
-      android:versionCode="1"
-      android:versionName="1.0">
-    <application android:icon="@drawable/icon" android:label="@string/app_name">
-        
-    <activity android:name=".Browser"><intent-filter><action android:name="android.intent.action.MAIN"></action>
-<category android:name="android.intent.category.LAUNCHER"></category>
-</intent-filter>
-</activity>
-<activity android:name=".About"></activity>
-</application>
-    <uses-sdk android:minSdkVersion="2" />
+	package="org.allmydata.tahoelafs" android:versionCode="1"
+	android:versionName="1.0">
+	<application android:icon="@drawable/icon" android:label="@string/app_name">
 
-<uses-permission android:name="android.permission.INTERNET"></uses-permission>
+        <meta-data android:name="org.openintents.metadata.COMMENTS"
+                       android:value="@string/about_comments" />
+        <meta-data android:name="org.openintents.metadata.COPYRIGHT"
+                       android:value="@string/about_copyright" />
+        <meta-data android:name="org.openintents.metadata.AUTHORS"
+                       android:resource="@array/about_authors" />
+        <meta-data android:name="org.openintents.metadata.WEBSITE_LABEL"
+                       android:value="@string/about_website_label" />
+        <meta-data android:name="org.openintents.metadata.WEBSITE_URL"
+                       android:value="@string/about_website_url" />
+        <meta-data android:name="org.openintents.metadata.LICENSE"
+                       android:resource="@raw/license_short" />
+        <meta-data android:name="org.openintents.metadata.EMAIL"
+                       android:value="@string/about_email" />
+
+		<activity android:name=".Browser">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".About" />
+	</application>
+	<uses-sdk android:minSdkVersion="2" />
+
+	<uses-permission android:name="android.permission.INTERNET" />
 </manifest> 

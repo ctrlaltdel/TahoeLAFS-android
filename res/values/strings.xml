@@ -2,13 +2,113 @@
 <resources>
     <string name="hello">Hello World, TahoeLAFS!</string>
     <string name="app_name">TahoeLAFS</string>
-<string-array name="about_authors"><item>François Deppierraz</item>
-</string-array>
-<string name="about_website_url">http://francois.ctrlaltdel.ch/tahoe-android</string>
-<string name="about_comments">Comments</string>
-<string name="about_copyright">Copyright</string>
-<string name="about_website_label">website label</string>
-<string name="license_short">license</string>
-<string name="about_email">francois@ctrlaltdel.ch</string>
-<string name="settings">Settings</string>
-</resources>
+    <string name="settings">Settings</string>
+
+<!-- Taken from OI FileManager -->
+    <string name="menu_new_folder">New Folder</string>
+    <string name="menu_delete">Delete</string>
+    <string name="menu_rename">Rename</string>
+    <string name="menu_send">Send</string>
+    <string name="menu_open">Open</string>
+    <string name="menu_move">Move</string>
+    <string name="menu_copy">Copy</string>
+    <string name="create_new_folder">Create new folder</string>
+    <string name="folder_name">Folder name</string>
+    <string name="file_name">Folder name</string>
+    <string name="this_folder_is_empty">This folder is empty.</string>
+    <string name="really_delete">Do you really want to delete %s?</string>
+    <string name="file_deleted">File deleted.</string>
+    <string name="folder_deleted">Folder deleted.</string>
+    <string name="file_renamed">File renamed.</string>
+    <string name="folder_renamed">Folder renamed.</string>
+    <string name="file_moved">File moved.</string>
+    <string name="folder_moved">Folder moved.</string>
+    <string name="file_copied">File copied.</string>
+    <string name="move_title">Select folder to move to</string>
+    <string name="move_button">Move here</string>
+    <string name="copy_title">Select folder to copy to</string>
+    <string name="copy_button">Copy here</string>
+
+    <string name="copied_file_name">Copy of %s</string>
+    <string name="copied_file_name_2">Copy %d of %s</string>
+    <string name="error_creating_new_folder">Could not create new folder.</string>
+    <string name="error_deleting_file">Could not delete file.</string>
+    <string name="error_folder_not_empty">Folder is not empty.</string>
+    <string name="error_renaming_file">Could not rename file.</string>
+    <string name="error_renaming_folder">Could not rename folder.</string>
+    <string name="error_moving_file">Could not move file.</string>
+    <string name="error_moving_folder">Could not move folder.</string>
+    <string name="error_copying_file">Could not copy file.</string>
+    <string name="error_file_does_not_exists">File does not exist.</string>
+    <string name="send_not_available">No application available for sending.</string>
+    <string name="application_not_available">Application not available</string>
+
+  <!-- ***************************
+       Distribution
+       *************************** -->
+ 
+  <!-- EULA -->
+  <string name="eula_title">OI File Manager EULA</string>
+  <string name="eula_accept">Accept</string>
+  <string name="eula_refuse">Cancel</string>
+ 
+  <!-- Update -->
+  <string name="update_box_text">Please check manually for updates or install OI Update
+for automatic notifications.
+Current version: %s
+  </string>
+  <string name="update_check_now">Check now.</string>
+  <string name="update_get_updater">Get OI Updater.</string>
+  <string name="update_error">Download application not available.</string>
+  <string name="update">Check updates</string>
+  
+    <!-- About -->
+    <string name="about">About</string>
+  <string name="aboutapp_not_available">Version %s\n\nNo compatible extension available to display full info (contact, credits, license).</string>
+    <string name="aboutapp_get">Get OI About</string>
+
+	<!-- ***************************
+	     About information
+	     *************************** -->
+	<string name="about_copyright">Copyright © 2008-2009 OpenIntents for the File manager and 2009 François Deppierraz for the rest</string> 
+	<string name="about_website_url">http://www.openintents.org/en/node/159</string>
+	<string name="about_email">francois@ctrlaltdel.ch</string>
+	
+    <string-array name="about_authors"><!-- Add your name here if you helped out -->
+        <item>François Deppierraz</item>
+        <item>Peli</item>
+        <item>Friedger</item>
+        <item>"Nicolas 'plusminus' Gramlich"</item>
+        <item>Steven Osborn</item>
+        <item>"Michael 'EboMike' Krehan"</item>
+    </string-array>
+    
+    <string-array name="about_documenters"><!-- Add your name here if you helped out -->
+        <!-- <item></item> -->
+    </string-array>
+    
+    <string-array name="about_translators"><!-- Add your name here if you helped out, but only in the arrays.xml for the localization that you helped to translate into! -->
+        <!-- <item></item>  -->
+    </string-array>
+    
+    <string-array name="about_artists"><!-- Add your name here if you helped out -->
+        <item>Peli</item>
+    </string-array>
+    
+	<!-- ***************************
+	     Distribution
+	     *************************** -->
+	<!-- Update -->
+	<string name="update_app_url">market://search?q=pname:org.openintents.filemanager</string>
+	<string name="update_checker_url">market://search?q=pname:org.openintents.updatechecker</string>
+	
+	<!-- About -->
+    <string name="aboutapp_market_uri">market://search?q=pname:org.openintents.about</string>
+    
+	<!-- ***************************
+	     Preferences
+	     *************************** -->
+	
+<string name="about_comments"></string>
+<string name="about_website_label"></string>
+</resources> 

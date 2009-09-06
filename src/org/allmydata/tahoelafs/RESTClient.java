@@ -2,7 +2,6 @@ package org.allmydata.tahoelafs;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,21 +11,15 @@ import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
-import java.security.KeyStore;
-
 import javax.net.ssl.SSLException;
-import javax.net.ssl.SSLSocketFactory;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPut;
-import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.HttpContext;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -35,7 +28,13 @@ import android.util.Log;
 public class RESTClient {
 	private static String TAG = "org.allmydata.tahoelafs.RESTClient";
 
-	public static String get(String url) {
+	private HttpClient httpclient;
+	
+	public RESTClient() {
+		httpclient = new DefaultHttpClient();
+	}
+	
+	public String get(String url) {
 		InputStream instream = openURL(url);
 		String result = convertStreamToString(instream);
 		Log.i(TAG, "Result of conversion: [" + result + "]");
@@ -49,18 +48,17 @@ public class RESTClient {
 		}
 	}
 	
-	public static void put(String url, String filename) throws Exception {
+	public void put(String url, String filename) throws Exception {
 		Log.i(TAG, "PUT " + url);
 		
-		HttpClient client = new DefaultHttpClient();
 		HttpPut put = new HttpPut(url);
 		put.setEntity(new FileEntity(new File(filename), "text/plain"));
-		HttpResponse response = client.execute(put);
+		HttpResponse response = httpclient.execute(put);
 		
 		Log.i(TAG, "Status:[" + response.getStatusLine().toString() + "]");
 	}
 
-	public static void download(String url, String dst) throws IOException {
+	public void download(String url, String dst) throws IOException {
 		Log.i(TAG, "Downloading " + url + " to " + dst);
 
 		Log.d(TAG, "Opening url " + url);
@@ -85,7 +83,7 @@ public class RESTClient {
 		out.close();
 	}
 
-	public static JSONArray getJSON(String url) {
+	public JSONArray getJSON(String url) {
 		String result = get(url);
 		try {
 			JSONArray json = new JSONArray(result);
@@ -131,8 +129,7 @@ public class RESTClient {
 		return sb.toString();
 	}
 
-	private static InputStream openURL(String url) {
-		HttpClient httpclient = new DefaultHttpClient();
+	private InputStream openURL(String url) {
 		HttpGet httpget = new HttpGet(url);
 		HttpResponse response;
 

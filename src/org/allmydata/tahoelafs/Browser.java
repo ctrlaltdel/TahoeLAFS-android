@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
@@ -19,7 +20,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 
-public class Browser extends ListActivity {
+public class Browser extends ListActivity implements Runnable {
     private static final String TAG = "DirectoryList";
 
     private String TEST_NODE    = "http://testgrid.allmydata.org:3567";
@@ -126,16 +127,41 @@ public class Browser extends ListActivity {
         loadDirectory(cap);
     }
     
-    private void loadDirectory(String cap) {        
+    // Need handler for callbacks to the UI thread
+    final Handler mHandler = new Handler();
+
+    // Create runnable for posting
+    final Runnable mUpdateResults = new Runnable() {
+        public void run() {
+            updateResultsInUi();
+        }
+    };
+
+    protected void startLongRunningOperation() {
+        // Fire off a thread to do some work that we shouldn't do directly in the UI thread
+
+    }
+  
+    protected void loadDirectory(String cap) {
+    	current_cap = cap;
+    	
+        Thread thread = new Thread(this);
+        thread.start();
+    }
+    
+    public void run() {
         try {
-        	current_cap = cap;
-        	dir = tahoe.getDirectory(cap);
+        	dir = tahoe.getDirectory(current_cap);
         	assert dir != null;
         } catch (Exception e) {
-        	Toast.makeText(this, "Cannot access the directory referenced by " + cap, Toast.LENGTH_LONG).show();
+        	Toast.makeText(this, "Cannot access the directory referenced by " + current_cap, Toast.LENGTH_LONG).show();
         	return;
         }
         
+        mHandler.post(mUpdateResults);
+    }
+    
+    private void updateResultsInUi() {
         this.setListAdapter(new ArrayAdapter<String>(
         	this, android.R.layout.simple_list_item_1, dir.toStringArray()));
     }

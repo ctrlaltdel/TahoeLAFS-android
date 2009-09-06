@@ -33,7 +33,7 @@ public class Browser extends ListActivity implements Runnable {
     String current_cap;
     
     private TahoeClient tahoe;
-    private TahoeDirectory dir;
+    private TahoeDirectory dir = null;
     
     private ProgressDialog pd;
     
@@ -82,6 +82,8 @@ public class Browser extends ListActivity implements Runnable {
         		return true;
         		
         	case MENU_REFRESH:
+        		// Force a refresh
+        		dir = null;
         		loadDirectory(current_cap);
         		return true;
         	
@@ -145,10 +147,12 @@ public class Browser extends ListActivity implements Runnable {
     protected void loadDirectory(String cap) {
     	current_cap = cap;
     	
-    	pd = ProgressDialog.show(this, "Please wait..", "Opening directory",
+    	if (dir == null) {
+    		pd = ProgressDialog.show(this, "Please wait..", "Opening directory",
     			true, false);
-        Thread thread = new Thread(this);
-        thread.start();
+    		Thread thread = new Thread(this);
+    		thread.start();
+    	}
     }
     
     public void run() {

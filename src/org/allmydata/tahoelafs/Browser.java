@@ -182,7 +182,12 @@ public class Browser extends ListActivity implements Runnable {
     		switch (type) {
     		case dirnode:
     			Log.i(TAG, "A directory was selected");
-    			loadDirectory(dir.getReadCap(position));
+        		
+        		Intent intent = new Intent();
+        		intent.setClassName("org.allmydata.tahoelafs", "org.allmydata.tahoelafs.Browser");
+        		intent.setData(Uri.fromParts("lafs", "", dir.getReadCap(position)));
+        		startActivity(intent);
+        		
     			return;
 
     		case filenode:

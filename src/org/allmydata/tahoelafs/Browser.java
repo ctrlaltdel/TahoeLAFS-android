@@ -75,8 +75,10 @@ public class Browser extends ListActivity implements Runnable {
         		return true;
         		
         	case MENU_HOME:
-        		intent = new Intent(android.content.Intent.ACTION_VIEW);
+        		intent = new Intent();
+        		intent.setClassName("org.allmydata.tahoelafs", "org.allmydata.tahoelafs.Browser");
         		intent.setData(Uri.fromParts("lafs", "", rootcap));
+        		startActivity(intent);
         		return true;
         		
         	case MENU_REFRESH:

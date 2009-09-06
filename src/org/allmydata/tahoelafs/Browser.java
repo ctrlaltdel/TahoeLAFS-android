@@ -97,7 +97,7 @@ public class Browser extends ListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        setContentView(R.layout.browser);
+        //setContentView(R.layout.browser);
 
         setDefaultKeyMode(DEFAULT_KEYS_SHORTCUT);
         

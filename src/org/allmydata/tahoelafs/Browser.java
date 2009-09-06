@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.allmydata.tahoelafs.TahoeDirectory.types;
 
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -33,6 +34,8 @@ public class Browser extends ListActivity implements Runnable {
     
     private TahoeClient tahoe;
     private TahoeDirectory dir;
+    
+    private ProgressDialog pd;
     
     // Menu item ids
     public static final int MENU_UPLOAD   = Menu.FIRST;
@@ -140,6 +143,8 @@ public class Browser extends ListActivity implements Runnable {
     protected void loadDirectory(String cap) {
     	current_cap = cap;
     	
+    	pd = ProgressDialog.show(this, "Please wait..", "Opening directory",
+    			true, false);
         Thread thread = new Thread(this);
         thread.start();
     }
@@ -159,6 +164,7 @@ public class Browser extends ListActivity implements Runnable {
     private void updateResultsInUi() {
         this.setListAdapter(new ArrayAdapter<String>(
         	this, android.R.layout.simple_list_item_1, dir.toStringArray()));
+        pd.dismiss();
     }
 
     @Override

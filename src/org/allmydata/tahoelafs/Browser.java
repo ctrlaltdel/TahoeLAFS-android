@@ -136,11 +136,6 @@ public class Browser extends ListActivity implements Runnable {
             updateResultsInUi();
         }
     };
-
-    protected void startLongRunningOperation() {
-        // Fire off a thread to do some work that we shouldn't do directly in the UI thread
-
-    }
   
     protected void loadDirectory(String cap) {
     	current_cap = cap;

@@ -110,7 +110,20 @@ public class Browser extends ListActivity implements Runnable {
                 return true;
         	case MENU_ABOUT:
         		intent = new Intent("org.openintents.action.SHOW_ABOUT_DIALOG");
-        		startActivityForResult(intent, 0);
+
+            try {
+        		  startActivityForResult(intent, 0);
+            } catch (ActivityNotFoundException e) {
+              Toast.makeText(this, "Please install OI About.", Toast.LENGTH_LONG).show();
+
+              intent = new Intent(Intent.ACTION_VIEW);
+              intent.setData(Uri.parse("market://search?q=pname:org.openintents.about"));
+              startActivity(intent);
+
+              return false;
+            }
+
+              
         		return true;
         }
         

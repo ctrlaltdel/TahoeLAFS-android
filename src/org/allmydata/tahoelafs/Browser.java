@@ -158,18 +158,22 @@ public class Browser extends ListActivity implements Runnable {
     public void run() {
         try {
         	dir = tahoe.getDirectory(current_cap);
-        	assert dir != null;
         } catch (Exception e) {
-        	Toast.makeText(this, "Cannot access the directory referenced by " + current_cap, Toast.LENGTH_LONG).show();
-        	return;
+        	//Toast.makeText(this, "Cannot access the directory referenced by " + current_cap, Toast.LENGTH_LONG).show();
+        	Log.d(TAG, "Cannot access the directory referenced by " + current_cap);
         }
-        
+
         mHandler.post(mUpdateResults);
     }
     
     private void updateResultsInUi() {
-        this.setListAdapter(new ArrayAdapter<String>(
-        	this, android.R.layout.simple_list_item_1, dir.toStringArray()));
+        if (dir != null) {
+          this.setListAdapter(new ArrayAdapter<String>(
+        	  this, android.R.layout.simple_list_item_1, dir.toStringArray()));
+        } else {
+        	  Toast.makeText(this, "Cannot access the directory referenced by " + current_cap, Toast.LENGTH_LONG).show();
+        }
+          
         pd.dismiss();
     }
 

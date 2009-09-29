@@ -83,7 +83,7 @@ public class RESTClient {
 		out.close();
 	}
 
-	public JSONArray getJSON(String url) {
+	public JSONArray getJSON(String url) throws Exception {
 		String result = get(url);
 		try {
 			JSONArray json = new JSONArray(result);
@@ -94,7 +94,7 @@ public class RESTClient {
 			return json;
 		} catch (JSONException e) {
 			Log.e("JSON", "There was an error parsing the JSON", e);
-			return null;
+		  throw new Exception(result);
 		}
 	}
 

@@ -8,6 +8,7 @@ import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.ActivityNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -67,7 +68,18 @@ public class Browser extends ListActivity implements Runnable {
         switch (item.getItemId()) {
         	case MENU_UPLOAD:
         		intent = new Intent("org.openintents.action.PICK_FILE");
-        		startActivityForResult(intent, 1);
+
+            try {
+        		  startActivityForResult(intent, 1);
+            } catch (ActivityNotFoundException e) {
+        	    Toast.makeText(this, "Please install OI File Manager.", Toast.LENGTH_LONG).show();
+
+              intent = new Intent(Intent.ACTION_VIEW);
+              intent.setData(Uri.parse("market://search?q=pname:org.openintents.filemanager"));
+              startActivity(intent);
+
+              return false;
+            }
         		return true;
         		
         	case MENU_MKDIR:
@@ -250,7 +262,12 @@ public class Browser extends ListActivity implements Runnable {
     
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     	Log.i(TAG, "Back from startActivityForResult");
-    	String params = data.getDataString();
+
+      try {
+    	  String params = data.getDataString();
+      } catch (Exception e) {
+        return;
+      }
     	
     	switch (requestCode) {
     	case ACT_DONTCARE:

@@ -1,0 +1,16 @@
+= Tahoe-LAFS Android client =
+
+A Tahoe-LAFS client running under Android.
+
+This Android application connects to a configurable Tahoe WAPI and
+allows users to browse through the directories and files stored in a
+given rootcap.
+
+
+== References ==
+
+Tahoe-LAFS -- http://allmydata.org
+
+== Authors ==
+
+François Deppierraz <francois@ctrlaltdel.ch>

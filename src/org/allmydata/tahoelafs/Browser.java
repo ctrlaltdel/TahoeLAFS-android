@@ -80,10 +80,13 @@ public class Browser extends ListActivity implements Runnable {
 
               return false;
             }
+
+            refresh();
         		return true;
         		
         	case MENU_MKDIR:
         		
+            refresh();
         		return true;
         		
         	case MENU_HOME:
@@ -95,14 +98,15 @@ public class Browser extends ListActivity implements Runnable {
         		
         	case MENU_REFRESH:
         		// Force a refresh
-        		dir = null;
-        		loadDirectory(current_cap);
+            refresh();
         		return true;
         	
         	case MENU_SETTINGS:
-                Intent myIntent = new Intent();
-                myIntent.setClassName("org.allmydata.tahoelafs", "org.allmydata.tahoelafs.Settings");
-                startActivity(myIntent);
+            Intent myIntent = new Intent();
+            myIntent.setClassName("org.allmydata.tahoelafs", "org.allmydata.tahoelafs.Settings");
+            startActivity(myIntent);
+            refresh();
+
                 return true;
         	case MENU_ABOUT:
         		intent = new Intent("org.openintents.action.SHOW_ABOUT_DIALOG");
@@ -165,6 +169,11 @@ public class Browser extends ListActivity implements Runnable {
     		Thread thread = new Thread(this);
     		thread.start();
     	}
+    }
+
+    protected void refresh() {
+      dir = null;
+      loadDirectory(current_cap);
     }
     
     public void run() {

@@ -24,9 +24,6 @@ import android.widget.Toast;
 
 public class Browser extends ListActivity implements Runnable {
     private static final String TAG = "DirectoryList";
-
-    private String TEST_NODE    = "http://pubgrid.tahoe-lafs.org";
-    private String TEST_ROOTCAP = "URI:DIR2:ctmtx2awdo4xt77x5xxaz6nyxm:n5t546ddvd6xlv4v6se6sjympbdbvo7orwizuzl42urm73sxazqa";
     
     String node;
     String rootcap;
@@ -102,9 +99,7 @@ public class Browser extends ListActivity implements Runnable {
         		return true;
         	
         	case MENU_SETTINGS:
-            Intent myIntent = new Intent();
-            myIntent.setClassName("org.allmydata.tahoelafs", "org.allmydata.tahoelafs.Settings");
-            startActivity(myIntent);
+            startActivity(new Intent(this, Prefs.class));
             refresh();
 
                 return true;
@@ -134,7 +129,8 @@ public class Browser extends ListActivity implements Runnable {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        //setContentView(R.layout.browser);
+        String test_node = getString(R.string.test_node);
+        String test_rootcap = getString(R.string.test_rootcap);
 
         setDefaultKeyMode(DEFAULT_KEYS_SHORTCUT);
         
@@ -144,10 +140,10 @@ public class Browser extends ListActivity implements Runnable {
         getListView().setOnCreateContextMenuListener(this);
         
         // Get preferences
-        node = prefs.getString("node", TEST_NODE);
-        rootcap = prefs.getString("rootcap", TEST_ROOTCAP);
+        node = prefs.getString(Prefs.KEY_NODE, test_node);
+        rootcap = prefs.getString(Prefs.KEY_ROOTCAP, test_rootcap);
         
-        if (node.equals(TEST_NODE) && rootcap.equals(TEST_ROOTCAP)) {
+        if (node.equals(test_node) && rootcap.equals(test_rootcap)) {
         	Toast.makeText(this, "Warning: You are using the TESTING grid\nyou can change that in the settings", Toast.LENGTH_LONG).show();
         }
         

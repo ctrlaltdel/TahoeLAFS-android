@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Hello World, TahoeLAFS!</string>
     <string name="app_name">Tahoe-LAFS</string>
     <string name="settings">Settings</string>
+
+<!-- Default Grid -->
+    <string name="test_node">http://pubgrid.tahoe-lafs.org</string>
+    <string name="test_rootcap">URI:DIR2:ctmtx2awdo4xt77x5xxaz6nyxm:n5t546ddvd6xlv4v6se6sjympbdbvo7orwizuzl42urm73sxazqa</string>
 
 <!-- Taken from OI FileManager -->
     <string name="menu_new_folder">New Folder</string>

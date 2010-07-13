@@ -3,14 +3,22 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
-<FrameLayout android:id="@+id/FrameLayout01" android:layout_width="wrap_content" android:layout_height="wrap_content"><Button android:text="Button01" android:id="@+id/Button01" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button><TextView android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="@string/hello" /></FrameLayout>
-<ListView android:id="@id/android:list" android:layout_width="wrap_content" android:layout_height="wrap_content"></ListView>
-
-
-
-
-
-
-
-
+    <FrameLayout
+        android:id="@+id/FrameLayout01"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    <Button
+        android:text="Button01"
+        android:id="@+id/Button01"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="asd" />
+</FrameLayout>
+<ListView
+    android:id="@id/android:list"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" />
 </LinearLayout>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="org.allmydata.tahoelafs" android:versionCode="2" android:versionName="0.1">
-	<application android:icon="@drawable/icon" android:label="@string/app_name">
+	package="org.allmydata.tahoelafs" android:versionName="0.1" android:versionCode="2">
+	<application android:icon="@drawable/logo_tahoe" android:label="@string/app_name">
 
         <meta-data android:name="org.openintents.metadata.COMMENTS"
                        android:value="@string/about_comments" />

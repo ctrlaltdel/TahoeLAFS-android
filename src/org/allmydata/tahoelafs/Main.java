@@ -11,6 +11,7 @@ public class Main extends Activity {
         super.onCreate(savedInstanceState);
 
         startActivity(new Intent(this, Browser.class));
+        finish();
     }
 
 }

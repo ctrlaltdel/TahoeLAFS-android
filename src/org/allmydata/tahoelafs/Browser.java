@@ -25,8 +25,8 @@ import android.widget.Toast;
 public class Browser extends ListActivity implements Runnable {
     private static final String TAG = "DirectoryList";
 
-    private String TEST_NODE    = "http://testgrid.allmydata.org:3567";
-    private String TEST_ROOTCAP = "URI:DIR2:djrdkfawoqihigoett4g6auz6a:jx5mplfpwexnoqff7y5e4zjus4lidm76dcuarpct7cckorh2dpgq";
+    private String TEST_NODE    = "http://pubgrid.tahoe-lafs.org";
+    private String TEST_ROOTCAP = "URI:DIR2:ctmtx2awdo4xt77x5xxaz6nyxm:n5t546ddvd6xlv4v6se6sjympbdbvo7orwizuzl42urm73sxazqa";
     
     String node;
     String rootcap;

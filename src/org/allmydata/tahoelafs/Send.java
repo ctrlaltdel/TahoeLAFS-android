@@ -1,6 +1,11 @@
 package org.allmydata.tahoelafs;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URLEncoder;
+
+import org.apache.http.client.ClientProtocolException;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -29,9 +34,6 @@ public class Send extends Activity {
             Log.i(TAG, "No valid intent data");
             finish();
         }
-        if (intent.getCategories() != null) {
-            Log.i(TAG, "categories=" + intent.getCategories().toString());
-        }
 
         // Get intent data and upload file
         Uri uri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
@@ -47,25 +49,29 @@ public class Send extends Activity {
             TahoeClient tahoe = new TahoeClient(node);
 
             if (scheme != null) {
-                Log.v(TAG, "scheme=" + scheme);
                 if (scheme.equals("content")) {
                     // Content: URI
                     long size = 0;
                     Cursor c = managedQuery(uri, COLUMNS, null, null, null);
                     if (c != null && c.moveToFirst()) {
-                        name = c.getString(0);
+                        name = encode(c.getString(0));
                         size = c.getLong(1);
                     }
                     c.close();
                     // Upload file
-                    try {
-                        Log.i(TAG, "filename=" + name);
-                        //
-                        tahoe
-                                .uploadFile(cap, name, getContentResolver().openInputStream(uri),
-                                        size);
-                    } catch (Exception e) {
-                        Log.e(TAG, e.getMessage());
+                    if (size > 0) {
+                        try {
+                            tahoe.uploadFile(cap, name, getContentResolver().openInputStream(uri),
+                                    size);
+                        } catch (ClientProtocolException e) {
+                            e.printStackTrace();
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (IllegalArgumentException e) {
+                            e.printStackTrace();
+                        }
                     }
                 } else if (scheme.equals("file")) {
                     // File: URI
@@ -76,11 +82,13 @@ public class Send extends Activity {
                         if (file.canRead()) {
                             // Upload file
                             try {
-                                Log.i(TAG, "filename=" + name);
-                                Log.i(TAG, "filepath=" + file.getCanonicalPath());
-                                tahoe.uploadFile(cap, name, file.getCanonicalPath());
-                            } catch (Exception e) {
-                                Log.e(TAG, e.getMessage());
+                                tahoe.uploadFile(cap, name, encode(file.getCanonicalPath()));
+                            } catch (ClientProtocolException e) {
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            } catch (IllegalArgumentException e) {
+                                e.printStackTrace();
                             }
                         } else {
                             Log.e(TAG, "file is not readable");
@@ -96,5 +104,9 @@ public class Send extends Activity {
         } else {
             Log.i(TAG, "uri is null");
         }
+    }
+
+    private String encode(String name) {
+        return URLEncoder.encode(name);
     }
 }

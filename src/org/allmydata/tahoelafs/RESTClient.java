@@ -27,182 +27,185 @@ import org.json.JSONException;
 import android.util.Log;
 
 public class RESTClient {
-	private static String TAG = "org.allmydata.tahoelafs.RESTClient";
+    private static String TAG = "org.allmydata.tahoelafs.RESTClient";
 
-	private HttpClient httpclient;
-	
-	public RESTClient() {
-		httpclient = new DefaultHttpClient();
-	}
-	
-	public String get(String url) {
-		InputStream instream = openURL(url);
-		String result = convertStreamToString(instream);
-		Log.i(TAG, "Result of conversion: [" + result + "]");
+    private HttpClient httpclient;
 
-		try {
-			instream.close();
-			return result;
-		} catch (IOException e) {
-			Log.e("REST", "There was an IO Stream related error", e);
-			return null;
-		}
-	}
-	
-	public void put(String url, String filename) throws Exception {
-		Log.i(TAG, "PUT " + url);
-		
-		HttpPut put = new HttpPut(url);
-		put.setEntity(new FileEntity(new File(filename), "text/plain"));
-		HttpResponse response = httpclient.execute(put);
-		
-		Log.i(TAG, "Status:[" + response.getStatusLine().toString() + "]");
-	}
-	
-	public void put(String url, InputStream instream, long len) throws Exception {
-		Log.i(TAG, "PUT " + url);
-		
-		HttpPut put = new HttpPut(url);
-		put.setEntity(new InputStreamEntity(instream, len));
-		HttpResponse response = httpclient.execute(put);
-		
-		Log.i(TAG, "Status:[" + response.getStatusLine().toString() + "]");
-	}
+    public RESTClient() {
+        httpclient = new DefaultHttpClient();
+    }
 
-	public void download(String url, String dst) throws IOException {
-		Log.i(TAG, "Downloading " + url + " to " + dst);
+    public String get(String url) {
+        InputStream instream = openURL(url);
+        String result = convertStreamToString(instream);
+        Log.i(TAG, "Result of conversion: [" + result + "]");
 
-		Log.d(TAG, "Opening url " + url);
-		InputStream in = openURL(url);
+        try {
+            instream.close();
+            return result;
+        } catch (IOException e) {
+            Log.e("REST", "There was an IO Stream related error", e);
+            return null;
+        }
+    }
 
-		Log.d(TAG, "Opening destination file " + dst);
-		OutputStream out = new FileOutputStream(dst);
+    public void put(String url, String filename) throws ClientProtocolException, IOException,
+            IllegalArgumentException {
+        Log.i(TAG, "PUT " + url);
 
-		Log.d(TAG, "Writing file");
-		final ReadableByteChannel inputChannel = Channels.newChannel(in);
-		final WritableByteChannel outputChannel = Channels.newChannel(out);
+        HttpPut put = new HttpPut(url);
+        put.setEntity(new FileEntity(new File(filename), "text/plain"));
+        HttpResponse response = httpclient.execute(put);
 
-		fastChannelCopy(inputChannel, outputChannel);
+        Log.i(TAG, "Status:[" + response.getStatusLine().toString() + "]");
+    }
 
-		inputChannel.close();
-		outputChannel.close();
+    public void put(String url, InputStream instream, long len) throws ClientProtocolException,
+            IOException, IllegalArgumentException {
+        Log.i(TAG, "PUT " + url);
 
-		Log.d(TAG, "Closing HTTP connection");
-		in.close();
+        HttpPut put = new HttpPut(url);
+        put.setEntity(new InputStreamEntity(instream, len));
+        HttpResponse response = httpclient.execute(put);
 
-		Log.d(TAG, "Closing file");
-		out.close();
-	}
+        Log.i(TAG, "Status:[" + response.getStatusLine().toString() + "]");
+    }
 
-	public JSONArray getJSON(String url) throws Exception {
-		String result = get(url);
-		try {
-			JSONArray json = new JSONArray(result);
-			for (int i = 0; i < json.length(); i++) {
-				Log.i(TAG, "<jsonname" + i + ">\n" + json.getString(i)
-						+ "\n</jsonname" + i + ">\n");
-			}
-			return json;
-		} catch (JSONException e) {
-			Log.e("JSON", "There was an error parsing the JSON", e);
-		  throw new Exception(result);
-		}
-	}
+    public void download(String url, String dst) throws IOException {
+        Log.i(TAG, "Downloading " + url + " to " + dst);
 
-	/*
-	 * PRIVATE STUFF
-	 */
+        Log.d(TAG, "Opening url " + url);
+        InputStream in = openURL(url);
 
-	private static String convertStreamToString(InputStream is) {
-		/*
-		 * To convert the InputStream to String we use the
-		 * BufferedReader.readLine() method. We iterate until the BufferedReader
-		 * return null which means there's no more data to read. Each line will
-		 * appended to a StringBuilder and returned as String.
-		 */
-		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-		StringBuilder sb = new StringBuilder();
+        Log.d(TAG, "Opening destination file " + dst);
+        OutputStream out = new FileOutputStream(dst);
 
-		String line = null;
-		try {
-			while ((line = reader.readLine()) != null) {
-				sb.append(line + "\n");
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				is.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		return sb.toString();
-	}
+        Log.d(TAG, "Writing file");
+        final ReadableByteChannel inputChannel = Channels.newChannel(in);
+        final WritableByteChannel outputChannel = Channels.newChannel(out);
 
-	private InputStream openURL(String url) {
-		HttpGet httpget = new HttpGet(url);
-		HttpResponse response;
+        fastChannelCopy(inputChannel, outputChannel);
 
-		Log.i(TAG, "GET " + url);
+        inputChannel.close();
+        outputChannel.close();
 
-		try {
-			try {
-				response = httpclient.execute(httpget);
-			} catch (SSLException e) {
-				Log.i(TAG, "SSL Certificate is not trusted");
-				
-				/*
-				KeyStore trustStore  = KeyStore.getInstance(KeyStore.getDefaultType());
-				KeyStore.getDefaultType(); 
-				FileInputStream in = new FileInputStream(new File("data/data/com.alu.myic.android/my.trustore3")); 
-				try { 
-					trustStore.load(in, "coucou".toCharArray()); 
-				} finally { 
-					in.close(); 
-				} 
+        Log.d(TAG, "Closing HTTP connection");
+        in.close();
 
-				SSLSocketFactory socketFactory = new SSLSocketFactory(trustStore); 
-				SchemeRegistry registry = new SchemeRegistry(); 
-				registry.register(new Scheme("https", socketFactory, 443));
-				*/ 
+        Log.d(TAG, "Closing file");
+        out.close();
+    }
 
-				response = httpclient.execute(httpget);
-			}
-			Log.i(TAG, "Status:[" + response.getStatusLine().toString() + "]");
-			HttpEntity entity = response.getEntity();
+    public JSONArray getJSON(String url) throws Exception {
+        String result = get(url);
+        try {
+            JSONArray json = new JSONArray(result);
+            for (int i = 0; i < json.length(); i++) {
+                Log
+                        .i(TAG, "<jsonname" + i + ">\n" + json.getString(i) + "\n</jsonname" + i
+                                + ">\n");
+            }
+            return json;
+        } catch (JSONException e) {
+            Log.e("JSON", "There was an error parsing the JSON", e);
+            throw new Exception(result);
+        }
+    }
 
-			if (entity != null) {
-				return entity.getContent();
-			}
-		} catch (ClientProtocolException e) {
-			Log.e("REST", "There was a protocol based error", e);
-		} catch (IOException e) {
-			Log.e("REST", "There was an IO Stream related error", e);
-		}
+    /*
+     * PRIVATE STUFF
+     */
 
-		return null;
-	}
+    private static String convertStreamToString(InputStream is) {
+        /*
+         * To convert the InputStream to String we use the
+         * BufferedReader.readLine() method. We iterate until the BufferedReader
+         * return null which means there's no more data to read. Each line will
+         * appended to a StringBuilder and returned as String.
+         */
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        StringBuilder sb = new StringBuilder();
 
-	// Code copied from
-	// http://thomaswabner.wordpress.com/2007/10/09/fast-stream-copy-using-javanio-channels/
-	private static void fastChannelCopy(final ReadableByteChannel src,
-			final WritableByteChannel dest) throws IOException {
-		final ByteBuffer buffer = ByteBuffer.allocateDirect(16 * 1024);
-		while (src.read(buffer) != -1) {
-			// prepare the buffer to be drained
-			buffer.flip();
-			// write to the channel, may block
-			dest.write(buffer);
-			// If partial transfer, shift remainder down
-			// If buffer is empty, same as doing clear()
-			buffer.compact();
-		}
-		// EOF will leave buffer in fill state
-		buffer.flip();
-		// make sure the buffer is fully drained.
-		while (buffer.hasRemaining()) {
-			dest.write(buffer);
-		}
-	}
+        String line = null;
+        try {
+            while ((line = reader.readLine()) != null) {
+                sb.append(line + "\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return sb.toString();
+    }
+
+    private InputStream openURL(String url) {
+        HttpGet httpget = new HttpGet(url);
+        HttpResponse response;
+
+        Log.i(TAG, "GET " + url);
+
+        try {
+            try {
+                response = httpclient.execute(httpget);
+            } catch (SSLException e) {
+                Log.i(TAG, "SSL Certificate is not trusted");
+
+                /*
+                 * KeyStore trustStore =
+                 * KeyStore.getInstance(KeyStore.getDefaultType());
+                 * KeyStore.getDefaultType(); FileInputStream in = new
+                 * FileInputStream(new
+                 * File("data/data/com.alu.myic.android/my.trustore3")); try {
+                 * trustStore.load(in, "coucou".toCharArray()); } finally {
+                 * in.close(); }
+                 * 
+                 * SSLSocketFactory socketFactory = new
+                 * SSLSocketFactory(trustStore); SchemeRegistry registry = new
+                 * SchemeRegistry(); registry.register(new Scheme("https",
+                 * socketFactory, 443));
+                 */
+
+                response = httpclient.execute(httpget);
+            }
+            Log.i(TAG, "Status:[" + response.getStatusLine().toString() + "]");
+            HttpEntity entity = response.getEntity();
+
+            if (entity != null) {
+                return entity.getContent();
+            }
+        } catch (ClientProtocolException e) {
+            Log.e("REST", "There was a protocol based error", e);
+        } catch (IOException e) {
+            Log.e("REST", "There was an IO Stream related error", e);
+        }
+
+        return null;
+    }
+
+    // Code copied from
+    // http://thomaswabner.wordpress.com/2007/10/09/fast-stream-copy-using-javanio-channels/
+    private static void fastChannelCopy(final ReadableByteChannel src,
+            final WritableByteChannel dest) throws IOException {
+        final ByteBuffer buffer = ByteBuffer.allocateDirect(16 * 1024);
+        while (src.read(buffer) != -1) {
+            // prepare the buffer to be drained
+            buffer.flip();
+            // write to the channel, may block
+            dest.write(buffer);
+            // If partial transfer, shift remainder down
+            // If buffer is empty, same as doing clear()
+            buffer.compact();
+        }
+        // EOF will leave buffer in fill state
+        buffer.flip();
+        // make sure the buffer is fully drained.
+        while (buffer.hasRemaining()) {
+            dest.write(buffer);
+        }
+    }
 }

@@ -19,6 +19,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.FileEntity;
+import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -53,6 +54,16 @@ public class RESTClient {
 		
 		HttpPut put = new HttpPut(url);
 		put.setEntity(new FileEntity(new File(filename), "text/plain"));
+		HttpResponse response = httpclient.execute(put);
+		
+		Log.i(TAG, "Status:[" + response.getStatusLine().toString() + "]");
+	}
+	
+	public void put(String url, InputStream instream, long len) throws Exception {
+		Log.i(TAG, "PUT " + url);
+		
+		HttpPut put = new HttpPut(url);
+		put.setEntity(new InputStreamEntity(instream, len));
 		HttpResponse response = httpclient.execute(put);
 		
 		Log.i(TAG, "Status:[" + response.getStatusLine().toString() + "]");
